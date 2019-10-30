@@ -107,6 +107,7 @@ main(){
                 heapSort(vetArq, tam);
                 printf("\n");
 
+                fclose(fptr);
             break;
         }
         if(i == 5){

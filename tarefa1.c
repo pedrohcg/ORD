@@ -2,7 +2,7 @@
 
 //****PROTOTIPOS***********
 void buildMaxHeapfy(int[], int);
-void maxHeapfy(int[], int);
+void maxHeapfy(int[], int, int);
 void heapSort(int[], int);
 void mostrar(int[], int);
 void encherVetor(int[], int);
@@ -10,6 +10,7 @@ void encherVetor(int[], int);
 //******MAIN***************
 main(){
     int tamanho, i;
+    FILE *fptr;
     int vet1[13] = {27, 17, 3, 16, 13, 10, 15, 7 , 12, 4, 8, 9, 0};
     int vet2[9] = {23, 17, 14, 6, 13, 10, 15, 7, 12};
     int vet3[4] = {7, 0, 4, 2};
@@ -22,11 +23,12 @@ main(){
 
     int vet[tamanho];
 
-   while(1){
+    while(1){
         printf("HEAP MAXIMO = 1\n");
         printf("HEAPSORT = 2\n");
-        printf("VETORES DE EXEMPLO = 3\n");
-        printf("SAIR = 4\n");
+        printf("VETORES DE TESTE = 3\n");
+        printf("VETORES DE TESTE DO ARQUIVO = 4\n");
+        printf("SAIR = 5\n");
         scanf(" %i", &i);
 
         switch(i){
@@ -82,8 +84,32 @@ main(){
                 heapSort(vet6, 4);
                 printf("\n");
             break;
+            case 4:
+                fptr = fopen("couting.txt", "r");
+                int tam, t, e;
+
+
+                if(!fptr){return;}                      //Verifica se o arquivo foi realmente aberto
+
+                fscanf(fptr, " %d", &tam);
+
+                int vetArq[tam];
+
+                for(t = 0; t < tam; t++){               //Enche o vetor com os nÃºmeros no arquivo
+                    fscanf(fptr, " %d", &e);
+                    vetArq[t] = e;
+                }
+
+                buildMaxHeapfy(vetArq, tam);
+                printf("MAXHEAPFY: ");
+                mostrar(vetArq, tam);
+                printf("\nHEAPSORT: ");
+                heapSort(vetArq, tam);
+                printf("\n");
+
+            break;
         }
-        if(i == 4){
+        if(i == 5){
             break;
         }
    }
@@ -94,23 +120,25 @@ main(){
 
 //********************BUILDMAXHEAPFY*************
 void buildMaxHeapfy(int vet[], int tam){
-    int c;
+    int c, t2;
 
-    for(c = tam; c >= 0; c--){
-       maxHeapfy(vet, c);
+    t2 = tam;
+
+    for(c = tam - 1; c >= 0; c--){
+       maxHeapfy(vet, t2, c);
     }
 }
 
 //********************MAXHEAPFY******************
-void maxHeapfy(int vet[], int tam){
-    int raiz = (tam/2) - 1;                         //Raiz é o último nó com filhos da árvore
-    int maior;                                      //Guarda a posição do maior valor
+void maxHeapfy(int vet[], int tam, int tam2){
+    int raiz = (tam2/2);                            //Raiz Ã© o Ãºltimo nÃ³ com filhos da Ã¡rvore
+    int maior;                                      //Guarda a posiÃ§Ã£o do maior valor
 
     while(raiz >= 0){
-        int l = raiz*2 + 1;                         //Elemento a esquerda da raiz
-        int r = raiz*2 + 2;                         //Elemento a direita da raiz
+        int l = raiz*2;                             //Elemento a esquerda da raiz
+        int r = raiz*2 + 1;                         //Elemento a direita da raiz
 
-        //Verifica se l está dentro do vetor e se o valor em l é menor que o valor da raiz
+        //Verifica se l estÃ¡ dentro do vetor e se o valor em l Ã© menor que o valor da raiz
 
         if((l < tam) && (vet[l] > vet[raiz])){
             maior = l;
@@ -120,29 +148,22 @@ void maxHeapfy(int vet[], int tam){
             maior = raiz;
         }
 
-        //Verifica se r está dentro do vetor e se o valor em r é menor que o valor da raiz
+        //Verifica se r estÃ¡ dentro do vetor e se o valor em r Ã© menor que o valor da raiz
 
         if((r < tam) && (vet[r] > vet[maior])){
             maior = r;
         }
 
         if(maior != raiz){
-            //Troca a posição do maior valor pelo valor da raiz
+            //Troca a posiÃ§Ã£o do maior valor pelo valor da raiz
             int aux = vet[maior];
             vet[maior] = vet[raiz];
             vet[raiz] = aux;
         }
 
-        if((r < tam) && (l < tam)){
-            //Deixa o maior valor sempre a esquerda
-            if(vet[r] > vet[l]){
-                int aux = vet[r];
-                vet[r] = vet[l];
-                vet[l] = aux;
-            }
-        }
-        raiz--;                                     //Decrementa a posição da raiz
+        raiz--;                                     //Decrementa a posiÃ§Ã£o da raiz
     }
+
 }
 //**********************************************
 
@@ -150,12 +171,12 @@ void maxHeapfy(int vet[], int tam){
 void heapSort(int vet[], int tam){
     int i, c, aux;
 
-    buildMaxHeapfy(vet, tam);                        //Cria uma heap máximo inicial
+    buildMaxHeapfy(vet, tam);                        //Cria uma heap mÃ¡ximo inicial
 
     c = tam;
 
     for(i = tam - 1; i > 0; i--){
-        //Troca o primeiro valor pelo último
+        //Troca o primeiro valor pelo Ãºltimo
         aux = vet[0];
         vet[0] = vet[i];
         vet[i] = aux;
@@ -165,7 +186,7 @@ void heapSort(int vet[], int tam){
 
         //Ordena o vetor
 
-        maxHeapfy(vet, c);
+        maxHeapfy(vet, c, tam);
     }
     mostrar(vet, tam);
 }
@@ -182,7 +203,7 @@ void mostrar(int vet[], int tam){
 }
 //*******************ENCHERVETOR*******************
 //Preenche o vetor com valores
-void encherVetor(int vet[], int tam){
+void encherVetor(int vet[],int tam){
     int c, i;
 
     for(c = 0; c < tam; c++){

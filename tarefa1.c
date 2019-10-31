@@ -9,83 +9,9 @@ void encherVetor(int[], int);
 //*************************
 //******MAIN***************
 main(){
-    int tamanho, i;
     FILE *fptr;
-    int vet1[13] = {27, 17, 3, 16, 13, 10, 15, 7 , 12, 4, 8, 9, 0};
-    int vet2[9] = {23, 17, 14, 6, 13, 10, 15, 7, 12};
-    int vet3[4] = {7, 0, 4, 2};
-    int vet4[4] = {8, 9, 5, 1};
-    int vet5[4] = {3, 8, 8, 8};
-    int vet6[4] = {9, 7, 8, 6};
 
-    printf("DIGITE O TAMANHO DO VETOR\n");
-    scanf(" %i", &tamanho);
-
-    int vet[tamanho];
-
-    while(1){
-        printf("HEAP MAXIMO = 1\n");
-        printf("HEAPSORT = 2\n");
-        printf("VETORES DE TESTE = 3\n");
-        printf("VETORES DE TESTE DO ARQUIVO = 4\n");
-        printf("SAIR = 5\n");
-        scanf(" %i", &i);
-
-        switch(i){
-            case 1:
-                encherVetor(vet, tamanho);
-                buildMaxHeapfy(vet, tamanho);
-                mostrar(vet, tamanho);
-            break;
-            case 2:
-                encherVetor(vet, tamanho);
-                heapSort(vet, tamanho);
-            break;
-            case 3:
-                buildMaxHeapfy(vet1, 13);
-                printf("MAXHEAPFY: ");
-                mostrar(vet1, 13);
-                printf("\nHEAPSORT: ");
-                heapSort(vet1, 13);
-                printf("\n");
-
-                buildMaxHeapfy(vet2, 9);
-                printf("MAXHEAPFY: ");
-                mostrar(vet2, 9);
-                printf("\nHEAPSORT: ");
-                heapSort(vet2, 9);
-                printf("\n");
-
-                buildMaxHeapfy(vet3, 4);
-                printf("MAXHEAPFY: ");
-                mostrar(vet3, 4);
-                printf("\nHEAPSORT: ");
-                heapSort(vet3, 4);
-                printf("\n");
-
-                buildMaxHeapfy(vet4, 4);
-                printf("MAXHEAPFY: ");
-                mostrar(vet4, 4);
-                printf("\nHEAPSORT: ");
-                heapSort(vet4, 4);
-                printf("\n");
-
-                buildMaxHeapfy(vet5, 4);
-                printf("MAXHEAPFY: ");
-                mostrar(vet5, 4);
-                printf("\nHEAPSORT: ");
-                heapSort(vet5, 4);
-                printf("\n");
-
-                buildMaxHeapfy(vet6, 4);
-                printf("MAXHEAPFY: ");
-                mostrar(vet6, 4);
-                printf("\nHEAPSORT: ");
-                heapSort(vet6, 4);
-                printf("\n");
-            break;
-            case 4:
-                fptr = fopen("couting.txt", "r");
+    fptr = fopen("couting.txt", "r");
                 int tam, t, e;
 
 
@@ -108,12 +34,6 @@ main(){
                 printf("\n");
 
                 fclose(fptr);
-            break;
-        }
-        if(i == 5){
-            break;
-        }
-   }
 }
 
 //*********************FUNCOES*******************

@@ -5,21 +5,14 @@
 
 int tam;
 
-struct G{
-};typedef struct G g;
-
-//***************PROTÓTIPOS*****************
+//***************PROTÃ“TIPOS*****************
 void inicializar(int[], int[]);
-void relaxamento(int, int, int, int[]);
-void buildMinHeapfy(g[], int);
-void minHeapfy(g[], int, int);
-
 //******************MAIN********************
 main(){
     FILE *fptr;
     int i, j;
 
-    fptr = fopen("dij10.txt", "r");
+    fptr = fopen("grafos/dij10.txt", "r");
 
     //Verifica se o arquivo foi aberto.
     if(!fptr){return 0;}
@@ -80,7 +73,7 @@ main(){
         fila.pop();
 
         if(visitado[u] == 0){
-            visitado[u] == 1;
+            visitado[u] = 1;
 
             std::list<std::pair<int, int> >::iterator v;
             //Percorre todos os vertices e faz o relaxamento
@@ -102,7 +95,7 @@ main(){
     return 0;
 }
 
-//*******************FUNÇÕES****************
+//*******************FUNÃ‡Ã•ES****************
 
 //*****************INICIALIZAR**************
 void inicializar(int d[], int visitado[]){
@@ -114,6 +107,3 @@ void inicializar(int d[], int visitado[]){
     }
     d[0] = 0;
 }
-
-
-

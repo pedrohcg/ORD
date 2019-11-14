@@ -1,7 +1,7 @@
 CC = g++
 
 all:
-	$(CC) tarefa1.c -fpermissive -o tarefa1
+	$(CC) Dijkstra.cpp -fpermissive -o Dijkstra
 
 clean:
-	rm tarefa1
+	rm Dijkstra

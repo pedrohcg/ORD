@@ -6,6 +6,7 @@
 #include <queue>
 #include <assert.h>
 #include <vector>
+#include <string>
 
 #include "node.h"
 #include "compare.h"

@@ -56,7 +56,7 @@ void huffman::createQueue(string file){
     //Percorre todo o arquivo e conta a frequencia dos caracteres
     while(!inFile.eof()){
         nodes[id]->freq++;
-        frequency[id]++;
+        //frequency[id]++;
         id = inFile.get();
     }
     //aaa
@@ -107,43 +107,64 @@ void huffman::createCodes(node *a, string code){
 //****************************COMPRESS****************************
 void huffman::compress(string file){
     inFile.open(file, ios::in);
-    outFile.open(file + "huffman", ios::out | ios::binary);
-    string in = "", s = "";
-    int i;
+    outFile.open("result/" + file + ".huffman", ios::out | ios::binary);
+    string in = "";
+    unsigned char buffer;
+    int count = 0, id;
 
     //Verifica se o arquivo foi aberto
     assert(outFile.is_open());
     assert(inFile.is_open());
 
-    in += fila.size();
-    priority_queue<node*, vector<node*>, compare> temp(fila);
+    //Escreve o vetor de frequencias no arquivo
+    outFile.write((char*)&nodes, sizeof(node) * 256);
 
-    //Armazena no arquivo as frequencias e codigos
-    while(!temp.empty()){
-        node *a = temp.top();
-        in += a->id;
-        in += a->freq;
-        temp.pop();
+    //Pega o primeiro caractere do arquivo
+    id = inFile.get();
+
+    while(!inFile.eof()){
+        //pega o codigo do caractere
+        in = nodes[id]->code;
+        //percorre o string
+        for(char &c : in){
+
+            int x = c - '0';
+
+            //se x for igual a 1 muda a posicao do bit para a posicao do contador
+            if(x == 1){
+                buffer |= (1 << count);
+            }
+            //incrementa a posicao do bit
+            count++;
+
+            //se o contador for igual a 8 coloca o byte no arquivo e reseta.
+            if(count == 8){
+                outFile.put(buffer);
+                count = 0;
+                buffer = 0;
+            }
+        }
+        //Pega o proximo caractere
+        id = inFile.get();
     }
 
-    outFile.write(in.c_str(), in.size());
+    if(count != 0){
+        outFile.put(buffer);
+    }
+
     inFile.close();
     outFile.close();
 }
-
+//*******************************************************************************
 void huffman::teste(string file){
     inFile.open(file, ios::in);
 
-    int id, i = 0;
+    createNodes();
 
-    id = inFile.get();
-    i = inFile.get();
+    inFile.read(reinterpret_cast<char*> (&nodes), 1);
 
-    while(!inFile.eof()){
-        char c = id;
-        cout << c << endl;
-        cout << id << endl;
-        id = inFile.get();
+    for(int i = 0; i < 256; i++){
+        cout << nodes[i]->freq << endl;
     }
 
     inFile.close();

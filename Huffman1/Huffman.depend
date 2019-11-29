@@ -35,22 +35,24 @@
 1574635609 c:\users\pichau\documents\ord\huffman1\compare.h
 	"node.h"
 
-1574896091 c:\users\pichau\documents\ord\huffman1\node.h
+1575033617 c:\users\pichau\documents\ord\huffman1\node.h
 	<iostream>
+	<string>
 
-1574899570 source:c:\users\pichau\documents\ord\huffman1\huffman.cpp
+1575037260 source:c:\users\pichau\documents\ord\huffman1\huffman.cpp
 	"huffman.hpp"
 
-1574896091 c:\users\pichau\documents\ord\huffman1\huffman.hpp
+1575033626 c:\users\pichau\documents\ord\huffman1\huffman.hpp
 	<iostream>
 	<fstream>
 	<queue>
 	<assert.h>
 	<vector>
+	<string>
 	"node.h"
 	"compare.h"
 
-1574896321 source:c:\users\pichau\documents\ord\huffman1\main.cpp
+1575037907 source:c:\users\pichau\documents\ord\huffman1\main.cpp
 	<iostream>
 	<fstream>
 	<assert.h>

@@ -1,7 +1,6 @@
 #include "huffman.hpp"
 
 huffman::huffman(){
-    totalS = 0;
     createNodes();
 }
 //****************************writeByte**************************
@@ -46,7 +45,7 @@ void huffman::createNodes(){
 }
 //****************************CREATEQUEUE***************************
 void huffman::createQueue(string file){
-    int id, i;
+    int id, i, n = 0;
 
     inFile.open(file, ios::in);
     //Verifica se o arquivo foi aberto
@@ -56,18 +55,18 @@ void huffman::createQueue(string file){
     //Percorre todo o arquivo e conta a frequencia dos caracteres
     while(!inFile.eof()){
         nodes[id]->freq++;
-        //frequency[id]++;
+        frequency[id]++;
         id = inFile.get();
     }
     //aaa
     //Coloca na fila de prioridade minima os caracteres presentes no arquivo
     for(i = 0; i < 256; i++){
         if(nodes[i]->freq != 0){
+            n++;
             fila.push(nodes[i]);
-            totalS++;
         }
     }
-
+    cout << "NUMERO " << n << endl;
     inFile.close();
 }
 //****************************CREATETREE***************************
@@ -87,15 +86,14 @@ node* huffman::createTree(string file){
         raiz->freq += raiz->esq->freq + raiz->dir->freq;
         temp.pop();
         temp.push(raiz);
-
     }
 
-    return temp.top();
+    return raiz;
 }
 //****************************CREATECODE**************************
 void huffman::createCodes(node *a, string code){
     if(a){
-        if(a->id){
+        if(a->esq == NULL && a->dir == NULL){
             a->code = code;
         }
         else{
@@ -108,16 +106,19 @@ void huffman::createCodes(node *a, string code){
 void huffman::compress(string file){
     inFile.open(file, ios::in);
     outFile.open("result/" + file + ".huffman", ios::out | ios::binary);
-    string in = "";
+    string in = "", m = "";
     unsigned char buffer;
-    int count = 0, id;
+    int count = 0, s, id;
 
     //Verifica se o arquivo foi aberto
     assert(outFile.is_open());
     assert(inFile.is_open());
 
-    //Escreve o vetor de frequencias no arquivo
-    outFile.write((char*)&nodes, sizeof(node) * 256);
+//    for(s = 0; s < 256; s++){
+//        outFile.put(nodes[s]->id);
+//        outFile.put(nodes[s]->freq);
+//    }
+
 
     //Pega o primeiro caractere do arquivo
     id = inFile.get();
@@ -136,7 +137,7 @@ void huffman::compress(string file){
             }
             //incrementa a posicao do bit
             count++;
-
+            //cout << x << endl;
             //se o contador for igual a 8 coloca o byte no arquivo e reseta.
             if(count == 8){
                 outFile.put(buffer);
@@ -156,17 +157,65 @@ void huffman::compress(string file){
     outFile.close();
 }
 //*******************************************************************************
-void huffman::teste(string file){
+void huffman::esvaziar(){
+    while(!fila.empty()){
+        node *a = fila.top();
+        cout << "L1 " << a->id << endl;
+        cout << "F1 " << a->freq << endl;
+        fila.pop();
+    }
+}
+//*************************************DECOMPRESS*********************************
+void huffman::decompress(string file){
     inFile.open(file, ios::in);
+    outFile.open(file + ".decoded", ios::out);
+    int count = 7, b, f = 0;
+    unsigned char id;
+    string c = "", t = "";
+    node *a = raiz;
 
-    createNodes();
+    assert(inFile.is_open());
+    assert(outFile.is_open());
 
-    inFile.read(reinterpret_cast<char*> (&nodes), 1);
+    id = inFile.get();
+    t = writeByte(id);
 
-    for(int i = 0; i < 256; i++){
-        cout << nodes[i]->freq << endl;
+    while(!inFile.eof()){
+        //cout << t << endl;
+        for(b = 0; b < t.size()/2; b++){
+            swap(t[b], t[t.size() - b - 1]);
+        }
+        c += t;
+        id = inFile.get();
+        t = writeByte(id);
+
     }
 
+    //cout << c << endl;
+
+    for(char &l : c){
+        int x = l - '0';
+        //cout << a->freq << endl;
+        if(a->esq == NULL && a->dir == NULL){
+            outFile.put(a->id);
+            //cout << "A" << a->code << endl;
+            //cout << "RAIZ" << endl;
+            a = raiz;
+        }
+
+        if(x == 0){
+            a = a->esq;
+            //cout << "ESQ" << endl;
+        }
+
+        if(x == 1){
+            a = a->dir;
+            //cout << "DIR" << endl;
+        }
+    }
+
+
+    outFile.close();
     inFile.close();
 }
 //****************************PRINTTREE***************************

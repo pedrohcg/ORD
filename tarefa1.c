@@ -56,8 +56,8 @@ void maxHeapfy(int vet[], int tam, int tam2){
     int maior;                                      //Guarda a posição do maior valor
 
     while(raiz >= 0){
-        int l = raiz*2;                             //Elemento a esquerda da raiz
-        int r = raiz*2 + 1;                         //Elemento a direita da raiz
+        int l = raiz*2 + 1;                         //Elemento a esquerda da raiz
+        int r = raiz*2 + 2;                         //Elemento a direita da raiz
 
         //Verifica se l está dentro do vetor e se o valor em l é menor que o valor da raiz
 

@@ -173,13 +173,13 @@ void huffman::decompress(string file){
     unsigned char id;
     string c = "", t = "";
     node *a = raiz;
-
+    //Verifica se os arquivos foram realmente abertos
     assert(inFile.is_open());
     assert(outFile.is_open());
 
     id = inFile.get();
     t = writeByte(id);
-
+    //Percorre todo o arquivo e armazena todos os bytes em um unico string
     while(!inFile.eof()){
         //cout << t << endl;
         for(b = 0; b < t.size()/2; b++){
@@ -192,25 +192,25 @@ void huffman::decompress(string file){
     }
 
     //cout << c << endl;
-
+    //Percorre todos os caracteres do string
     for(char &l : c){
-        int x = l - '0';
+        int x = l - '0';        
         //cout << a->freq << endl;
         if(a->esq == NULL && a->dir == NULL){
+            //Se achar o no do caractere coloca ele no arquivo final
             outFile.put(a->id);
             //cout << "A" << a->code << endl;
             //cout << "RAIZ" << endl;
             a = raiz;
         }
 
-        if(x == 0){
-            a = a->esq;
-            //cout << "ESQ" << endl;
-        }
-
-        if(x == 1){
-            a = a->dir;
-            //cout << "DIR" << endl;
+        switch(x){
+            case 0:
+                a = a->esq;                 //Se o caractere for 0 vai pra esquerda
+                break;
+            case 1:
+                a = a->dir;                 //Se o caractere for 1 vai pra direita
+                break;
         }
     }
 

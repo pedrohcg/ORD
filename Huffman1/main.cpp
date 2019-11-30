@@ -32,13 +32,13 @@ int main(){
 //        a = file.get();
 //    }
 
-    h->createQueue("teste.txt");
+    h->createQueue("generated.fib25");
     node *a;
-    a = h->createTree("teste.txt");
+    a = h->createTree("generated.fib25");
     h->createCodes(a, "");
     h->printTree(a);
-    h->compress("teste.txt");
-    h->teste("teste.txthuffman");
+    h->compress("generated.fib25");
+    h->decompress("result/generated.fib25.huffman");
     //file.close();
 
    return 0;

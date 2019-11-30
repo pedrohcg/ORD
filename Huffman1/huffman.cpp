@@ -167,7 +167,7 @@ void huffman::esvaziar(){
 }
 //*************************************DECOMPRESS*********************************
 void huffman::decompress(string file){
-    inFile.open(file, ios::in);
+    inFile.open(file, ios::in | ios::binary);
     outFile.open(file + ".decoded", ios::out);
     int count = 7, b, f = 0;
     unsigned char id;

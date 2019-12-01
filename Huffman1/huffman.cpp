@@ -83,12 +83,12 @@ node* huffman::createTree(string file){
         raiz->esq = temp.top();
         temp.pop();
         raiz->dir = temp.top();
-        raiz->freq += raiz->esq->freq + raiz->dir->freq;
         temp.pop();
+        raiz->freq += raiz->esq->freq + raiz->dir->freq;
         temp.push(raiz);
     }
 
-    return raiz;
+    return temp.top();
 }
 //****************************CREATECODE**************************
 void huffman::createCodes(node *a, string code){
@@ -107,8 +107,8 @@ void huffman::compress(string file){
     inFile.open(file, ios::in);
     outFile.open("result/" + file + ".huffman", ios::out | ios::binary);
     string in = "", m = "";
-    unsigned char buffer;
-    int count = 0, s, id;
+    unsigned char buffer, id;
+    int count = 0, s, nb = 0;
 
     //Verifica se o arquivo foi aberto
     assert(outFile.is_open());
@@ -122,6 +122,7 @@ void huffman::compress(string file){
 
     //Pega o primeiro caractere do arquivo
     id = inFile.get();
+    nb++;
 
     while(!inFile.eof()){
         //pega o codigo do caractere
@@ -143,6 +144,7 @@ void huffman::compress(string file){
                 outFile.put(buffer);
                 count = 0;
                 buffer = 0;
+                nb++;
             }
         }
         //Pega o proximo caractere
@@ -151,7 +153,10 @@ void huffman::compress(string file){
 
     if(count != 0){
         outFile.put(buffer);
+        nb++;
     }
+
+    cout << "NUMERO BUFFERS " << nb << endl;
 
     inFile.close();
     outFile.close();
@@ -165,51 +170,52 @@ void huffman::esvaziar(){
         fila.pop();
     }
 }
-//*************************************DECOMPRESS*********************************
-void huffman::decompress(string file){
+//*****************************DECOMPRESS****************************************
+void huffman::decompress(string file, node *r){
     inFile.open(file, ios::in | ios::binary);
     outFile.open(file + ".decoded", ios::out);
-    int count = 7, b, f = 0;
+    int b, f = 0;
     unsigned char id;
     string c = "", t = "";
-    node *a = raiz;
-    //Verifica se os arquivos foram realmente abertos
+    node *a = r;
+
     assert(inFile.is_open());
     assert(outFile.is_open());
 
     id = inFile.get();
     t = writeByte(id);
-    //Percorre todo o arquivo e armazena todos os bytes em um unico string
+    f++;
+
     while(!inFile.eof()){
-        //cout << t << endl;
         for(b = 0; b < t.size()/2; b++){
             swap(t[b], t[t.size() - b - 1]);
         }
         c += t;
         id = inFile.get();
         t = writeByte(id);
+        f++;
+     }
 
-    }
+    cout << c << endl;
 
-    //cout << c << endl;
-    //Percorre todos os caracteres do string
+    cout << "BUFFERS LIDOS " << f << endl;
+
     for(char &l : c){
-        int x = l - '0';        
-        //cout << a->freq << endl;
+        int x = l - '0';
+        //cout << x << endl;
         if(a->esq == NULL && a->dir == NULL){
-            //Se achar o no do caractere coloca ele no arquivo final
             outFile.put(a->id);
             //cout << "A" << a->code << endl;
             //cout << "RAIZ" << endl;
-            a = raiz;
+            a = r;
         }
 
         switch(x){
             case 0:
-                a = a->esq;                 //Se o caractere for 0 vai pra esquerda
+                a = a->esq;
                 break;
             case 1:
-                a = a->dir;                 //Se o caractere for 1 vai pra direita
+                a = a->dir;
                 break;
         }
     }

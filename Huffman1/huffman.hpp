@@ -19,8 +19,7 @@ class huffman{
         ifstream inFile;
         node* nodes[256];
         node* raiz;
-        unsigned int frequency[256];
-        int totalS;
+        int frequency[256];
         priority_queue <node*, vector<node*>, compare> fila;
         void createNodes();
 
@@ -35,7 +34,9 @@ class huffman{
         void printTree(node* a);
         void printTreeE(node* a, int i);
         void printTreeD(node* a, int i);
-        void teste(string file);
+        void findChar(node *a, int i);
+        void esvaziar();
+        void decompress(string file, node *r);
 };
 
 #endif

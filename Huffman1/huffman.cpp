@@ -78,13 +78,14 @@ node* huffman::createTree(string file){
     tam = temp.size();
 
     //Cria a arvore
-    for(i = 0; i < tam; i++){
+    while(!temp.empty()){
         raiz = new node();
         raiz->esq = temp.top();
+        raiz->freq += temp.top()->freq;
         temp.pop();
         raiz->dir = temp.top();
+        raiz->freq += temp.top()->freq;
         temp.pop();
-        raiz->freq += raiz->esq->freq + raiz->dir->freq;
         temp.push(raiz);
     }
 
@@ -97,8 +98,8 @@ void huffman::createCodes(node *a, string code){
             a->code = code;
         }
         else{
-            createCodes(a->esq, code + '0');
-            createCodes(a->dir, code + '1');
+            createCodes(a->esq, code + '1');
+            createCodes(a->dir, code + '0');
         }
     }
 }
@@ -212,14 +213,13 @@ void huffman::decompress(string file, node *r){
 
         switch(x){
             case 0:
-                a = a->esq;
+                a = a->dir;
                 break;
             case 1:
-                a = a->dir;
+                a = a->esq;
                 break;
         }
     }
-
 
     outFile.close();
     inFile.close();

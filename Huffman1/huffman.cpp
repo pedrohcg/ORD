@@ -197,7 +197,7 @@ void huffman::decompress(string file, node *r){
         f++;
      }
 
-    cout << c << endl;
+    //cout << c << endl;
 
     cout << "BUFFERS LIDOS " << f << endl;
 

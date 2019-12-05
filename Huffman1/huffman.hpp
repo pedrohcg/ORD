@@ -7,6 +7,7 @@
 #include <assert.h>
 #include <vector>
 #include <string>
+#include <stdio.h>
 
 #include "node.h"
 #include "compare.h"
@@ -28,15 +29,13 @@ class huffman{
         string writeByte(int a);
         int readByte(string &i);
         void createQueue(string file);
-        node* createTree(string file);
+        node* createTree();
         void compress(string file);
         void createCodes(node *a, string code);
         void printTree(node* a);
         void printTreeE(node* a, int i);
         void printTreeD(node* a, int i);
-        void findChar(node *a, int i);
-        void esvaziar();
-        void decompress(string file, node *r);
+        void decompress(string file);
 };
 
 #endif

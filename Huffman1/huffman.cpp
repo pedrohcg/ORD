@@ -70,7 +70,7 @@ void huffman::createQueue(string file){
     inFile.close();
 }
 //****************************CREATETREE***************************
-node* huffman::createTree(string file){
+node* huffman::createTree(){
     int i, tam;
     //Fila de prioridade minima
     priority_queue <node*, vector<node*>, compare> temp(fila);
@@ -98,28 +98,30 @@ void huffman::createCodes(node *a, string code){
             a->code = code;
         }
         else{
-            createCodes(a->esq, code + '1');
-            createCodes(a->dir, code + '0');
+            createCodes(a->esq, code + '0');
+            createCodes(a->dir, code + '1');
         }
     }
 }
 //****************************COMPRESS****************************
 void huffman::compress(string file){
     inFile.open(file, ios::in);
-    outFile.open("result/" + file + ".huffman", ios::out | ios::binary);
+    FILE *fptr = fopen("result/teste3.txt.huffman", "wb");
     string in = "", m = "";
     unsigned char buffer, id;
     int count = 0, s, nb = 0;
+    unsigned int freq;
 
     //Verifica se o arquivo foi aberto
-    assert(outFile.is_open());
+    if(!fptr){return;}
     assert(inFile.is_open());
 
-//    for(s = 0; s < 256; s++){
-//        outFile.put(nodes[s]->id);
-//        outFile.put(nodes[s]->freq);
-//    }
+    for(s = 0; s < 256; s++){
+        fwrite(&nodes[s]->freq, sizeof(unsigned), 1, fptr);
+    }
+    fclose(fptr);
 
+    outFile.open("result/" + file + ".huffman", ios::app | ios::binary);
 
     //Pega o primeiro caractere do arquivo
     id = inFile.get();
@@ -162,64 +164,96 @@ void huffman::compress(string file){
     inFile.close();
     outFile.close();
 }
-//*******************************************************************************
-void huffman::esvaziar(){
-    while(!fila.empty()){
-        node *a = fila.top();
-        cout << "L1 " << a->id << endl;
-        cout << "F1 " << a->freq << endl;
-        fila.pop();
-    }
-}
 //*****************************DECOMPRESS****************************************
-void huffman::decompress(string file, node *r){
-    inFile.open(file, ios::in | ios::binary);
+void huffman::decompress(string file){
+    FILE *fptr = fopen("result/teste3.txt.huffman", "rb");
     outFile.open(file + ".decoded", ios::out);
     int b, f = 0;
     unsigned char id;
-    string c = "", t = "";
-    node *a = r;
+    string t = "";
+    node *a, *r;
+
+    assert(outFile.is_open());
+    if(!fptr){
+        return;
+    }
+
+    int aux = 0;
+    long unsigned int simbolosT = 0, simbolosL = 0;
+    //Le o vetor de frequencia armazenado no arquivo
+    for(b = 0; b < 256; b++){
+        fread(&aux, sizeof(unsigned), 1, fptr);
+        //cout << aux << endl;
+        nodes[b]->freq = aux;
+        //Coloca as folhas que tem uma frequencia diferente de 0 na fila de prioridade
+        if(nodes[b]->freq != 0){
+            fila.push(nodes[b]);
+            simbolosT += aux;
+        }
+    }
+    //Guarda onde esta no arquivo
+    int pos = ftell(fptr);
+
+    fclose(fptr);
+    //Recria a arvore e os codigos
+    r = createTree();
+    createCodes(r, "");
+    a = r;
+    //printTree(a);
+
+    inFile.open(file, ios::in | ios::binary);
 
     assert(inFile.is_open());
-    assert(outFile.is_open());
+
+    inFile.seekg(pos);
 
     id = inFile.get();
+    //Transforma o byte em um string de bits
     t = writeByte(id);
     f++;
 
     while(!inFile.eof()){
+        //Inverte o string
         for(b = 0; b < t.size()/2; b++){
             swap(t[b], t[t.size() - b - 1]);
         }
-        c += t;
+
+        for(char &l : t){
+            //Transforma em 0 ou 1 int
+            int x = l - '0';
+
+
+            //Se achar uma folha com letra escreve a letra no arquivo
+            if(a->esq == NULL && a->dir == NULL){
+                outFile.put(a->id);
+                a = r;
+                simbolosT--;
+            }
+
+            //Se o bit for 0 vai pra esquerda e se for 1 vai pra direita
+            switch(x){
+                case 0:
+                    a = a->esq;
+                    break;
+                case 1:
+                    a = a->dir;
+                    break;
+            }
+            if(simbolosT == 0){
+                break;
+            }
+        }
+
         id = inFile.get();
         t = writeByte(id);
         f++;
-     }
 
-    //cout << c << endl;
-
-    cout << "BUFFERS LIDOS " << f << endl;
-
-    for(char &l : c){
-        int x = l - '0';
-        //cout << x << endl;
-        if(a->esq == NULL && a->dir == NULL){
-            outFile.put(a->id);
-            //cout << "A" << a->code << endl;
-            //cout << "RAIZ" << endl;
-            a = r;
-        }
-
-        switch(x){
-            case 0:
-                a = a->dir;
-                break;
-            case 1:
-                a = a->esq;
-                break;
+        if(simbolosT == 0){
+            break;
         }
     }
+
+    cout << "BUFFERS LIDOS " << f << endl;
 
     outFile.close();
     inFile.close();

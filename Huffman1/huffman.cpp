@@ -219,10 +219,6 @@ void huffman::decompress(string file){
         }
 
         for(char &l : t){
-            //Transforma em 0 ou 1 int
-            int x = l - '0';
-
-
             //Se achar uma folha com letra escreve a letra no arquivo
             if(a->esq == NULL && a->dir == NULL){
                 outFile.put(a->id);
@@ -231,11 +227,11 @@ void huffman::decompress(string file){
             }
 
             //Se o bit for 0 vai pra esquerda e se for 1 vai pra direita
-            switch(x){
-                case 0:
+            switch(l){
+                case '0':
                     a = a->esq;
                     break;
-                case 1:
+                case '1':
                     a = a->dir;
                     break;
             }

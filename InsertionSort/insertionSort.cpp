@@ -13,7 +13,7 @@ int main(){
     list<int>::iterator pos2;
 
     srand(time(NULL));
-    //Preenche o vetor com números aleatórios
+    //Preenche o vetor com nÃºmeros aleatÃ³rios
     for(i = 0; i < 20; i++){
         vet.push_front(rand());
     }
@@ -24,10 +24,7 @@ int main(){
     }
 
     cout << endl;
-    for(i = 0; i < 20; i++){
-        //Pega o 1 elemento do vetor
-        pos = vet.begin();
-
+    for(pos = vet.begin(); pos != vet.end(); pos++){
         //Se o vetor auxiliar estiver vazio coloca o elemento na primeira posicao
         if(vetAux.empty()){
                 vetAux.push_front(*pos);
@@ -48,8 +45,6 @@ int main(){
                 vetAux.push_back(*pos);
             }
         }
-        //Apaga o elemento do fim
-        vet.erase(pos);
     }
 
     //Printa o vetor final

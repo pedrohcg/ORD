@@ -7,9 +7,9 @@ using namespace std;
 int main(){
     list<int> vet;
     list<int> vetAux;
-    int a, i, r;
     list<int>::iterator pos;
     list<int>::iterator pos2;
+    int i;
 
     srand(time(NULL));
     //Preenche o vetor com números aleatórios

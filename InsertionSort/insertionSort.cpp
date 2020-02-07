@@ -9,11 +9,11 @@ int main(){
     list<int> vetAux;
     list<int>::iterator pos;
     list<int>::iterator pos2;
-    int i;
+    int i, tam = 20;
 
     srand(time(NULL));
     //Preenche o vetor com números aleatórios
-    for(i = 0; i < 20; i++){
+    for(i = 0; i < tam; i++){
         vet.push_front(rand());
     }
 
@@ -24,26 +24,20 @@ int main(){
 
     cout << endl;
     for(pos = vet.begin(); pos != vet.end(); pos++){
-        //Se o vetor auxiliar estiver vazio coloca o elemento na primeira posicao
-        if(vetAux.empty()){
-                vetAux.push_front(*pos);
+        //Percorre todos os elementos do vetor auxiliar
+        for(pos2 = vetAux.begin(); pos2 != vetAux.end(); pos2++){
+            //Verifica se o elemento do vetor e menor que o elemento do vetor auxiliar
+            if(!vet.empty() && *pos < *pos2){
+                vetAux.insert(pos2, *pos);
+                break;
+            }
+        }
+        //Se percorrer ate o fim do vetor auxiliar significa que o vetor auxiliar nao tinha nenhum elemento menor que ele
+        //Logo, coloca esse elemento no fim
+        if(pos2 == vetAux.end() || vet.empty()){
+            vetAux.push_back(*pos);
         }
 
-        else{
-            //Percorre todos os elementos do vetor auxiliar
-            for(pos2 = vetAux.begin(); pos2 != vetAux.end(); pos2++){
-                //Verifica se o elemento do vetor e menor que o elemento do vetor auxiliar
-                if(*pos < *pos2){
-                    vetAux.insert(pos2, *pos);
-                    break;
-                }
-            }
-            //Se percorrer ate o fim do vetor auxiliar significa que o vetor auxiliar nao tinha nenhum elemento menor que ele
-            //Logo, coloca esse elemento no fim
-            if(pos2 == vetAux.end()){
-                vetAux.push_back(*pos);
-            }
-        }
     }
 
     //Printa o vetor final
@@ -51,4 +45,3 @@ int main(){
         cout << *pos << endl;
     }
 }
-

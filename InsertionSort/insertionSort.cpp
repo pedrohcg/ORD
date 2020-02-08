@@ -27,7 +27,7 @@ int main(){
         //Percorre todos os elementos do vetor auxiliar
         for(pos2 = vetAux.begin(); pos2 != vetAux.end(); pos2++){
             //Verifica se o elemento do vetor e menor que o elemento do vetor auxiliar
-            if(!vet.empty() && *pos < *pos2){
+            if(*pos < *pos2){
                 vetAux.insert(pos2, *pos);
                 break;
             }

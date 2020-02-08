@@ -34,7 +34,7 @@ int main(){
         }
         //Se percorrer ate o fim do vetor auxiliar significa que o vetor auxiliar nao tinha nenhum elemento menor que ele
         //Logo, coloca esse elemento no fim
-        if(pos2 == vetAux.end() || vet.empty()){
+        if(pos2 == vetAux.end()){
             vetAux.push_back(*pos);
         }
 
